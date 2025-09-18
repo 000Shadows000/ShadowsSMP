@@ -1,5 +1,23 @@
 [
-  { "jugador": "Shadows_000_", "construccion": 30, "tecnico": 25, "pvp": 40 },
-  { "jugador": "OtroJugador", "construccion": 20, "tecnico": 30, "pvp": 15 },
-  { "jugador": "Jugador3", "construccion": 50, "tecnico": 40, "pvp": 10 }
+  {
+    "nombre": "Jugador1",
+    "construccion": 10,
+    "tecnico": 8,
+    "pvp": 9,
+    "total": 27
+  },
+  {
+    "nombre": "Jugador2",
+    "construccion": 7,
+    "tecnico": 9,
+    "pvp": 6,
+    "total": 22
+  },
+  {
+    "nombre": "Jugador3",
+    "construccion": 12,
+    "tecnico": 15,
+    "pvp": 10,
+    "total": 37
+  }
 ]
