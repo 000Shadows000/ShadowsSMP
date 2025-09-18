@@ -2,85 +2,81 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Ranking del Evento</title>
-  <style>
-    body {
-      background: #0d0d0d;
-      color: #e0e0e0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #9b4dff;
-      margin-bottom: 20px;
-    }
-    table {
-      margin: auto;
-      border-collapse: collapse;
-      width: 80%;
-      background: #1a1a1a;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      border: 1px solid #333;
-      padding: 12px;
-    }
-    th {
-      background: #9b4dff;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background: #2a2a2a;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking Shadows SMP</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>🏆 Ranking del Evento</h1>
-  <table id="rankingTable">
-    <thead>
-      <tr>
-        <th>Jugador</th>
-        <th>Construcción</th>
-        <th>Técnico</th>
-        <th>PvP</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <header>
+    <h1>🏆 Ranking Shadows SMP</h1>
+  </header>
+
+  <main>
+    <section>
+      <table id="rankingTable">
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Jugador</th>
+            <th>Construcción</th>
+            <th>Técnico</th>
+            <th>PvP</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarán los jugadores automáticamente -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Shadows SMP</p>
+  </footer>
 
   <script>
-    async function cargarRanking() {
-      const response = await fetch("data.json");
+    async function cargarJugadores() {
+      const response = await fetch("jugadores.json");
       const jugadores = await response.json();
 
-      // calcular totales
+      const tbody = document.querySelector("#rankingTable tbody");
+      tbody.innerHTML = ""; // limpiar antes de cargar
+
+      // Insertar jugadores en la tabla
       jugadores.forEach(j => {
-        j.total = j.construccion + j.tecnico + j.pvp;
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td></td>
+          <td>${j.nombre}</td>
+          <td>${j.construccion}</td>
+          <td>${j.tecnico}</td>
+          <td>${j.pvp}</td>
+          <td>${j.total}</td>
+        `;
+        tbody.appendChild(fila);
       });
 
-      // ordenar de mayor a menor
-      jugadores.sort((a, b) => b.total - a.total);
+      ordenarTabla();
+    }
 
-      const tbody = document.querySelector("#rankingTable tbody");
-      tbody.innerHTML = "";
+    function ordenarTabla() {
+      const table = document.getElementById("rankingTable").tBodies[0];
+      const rows = Array.from(table.rows);
 
-      jugadores.forEach(j => {
-        const fila = `
-          <tr>
-            <td>${j.jugador}</td>
-            <td>${j.construccion}</td>
-            <td>${j.tecnico}</td>
-            <td>${j.pvp}</td>
-            <td><b>${j.total}</b></td>
-          </tr>`;
-        tbody.innerHTML += fila;
+      rows.sort((a, b) => {
+        const pointsA = parseInt(a.cells[5].innerText, 10);
+        const pointsB = parseInt(b.cells[5].innerText, 10);
+        return pointsB - pointsA;
+      });
+
+      rows.forEach((row, index) => {
+        row.cells[0].innerText = index + 1; // posición
+        table.appendChild(row);
       });
     }
 
-    cargarRanking();
+    window.onload = cargarJugadores;
   </script>
 </body>
 </html>
