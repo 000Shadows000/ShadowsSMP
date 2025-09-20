@@ -79,3 +79,11 @@ footer {
 .header-logos .logo {
   margin-bottom: 10px; /* espacio entre ambas */
 }
+.header-logos .logo {
+  max-width: 400px; /* tamaño del logo principal */
+  margin-bottom: 10px;
+}
+
+.header-logos .ranking {
+  max-width: 250px; /* achica la de Ranking */
+}
