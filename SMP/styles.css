@@ -64,3 +64,18 @@ footer {
   background: #0f3460;
   font-size: 0.9rem;
 }
+.header-logos {
+  display: flex;
+  flex-direction: column; /* una arriba de la otra */
+  align-items: center; /* centrado */
+  margin: 20px 0;
+}
+
+.header-logos img {
+  max-width: 400px; /* ajusta el tamaño */
+  height: auto;
+}
+
+.header-logos .logo {
+  margin-bottom: 10px; /* espacio entre ambas */
+}
