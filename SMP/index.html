@@ -9,8 +9,8 @@
 <body>
   <header>
     <div class="header-logos">
-  <img src="logo.png" alt="Shadows SMP" class="logo">
-  <img src="ranking.png" alt="Ranking" class="ranking">
+      <img src="logo.png" alt="Shadows SMP" class="logo">
+      <img src="ranking.png" alt="Ranking" class="ranking">
     </div>
   </header>
 
@@ -19,7 +19,7 @@
       <table id="rankingTable">
         <thead>
           <tr>
-            <th>Posición</th>
+            <th>Skin</th>
             <th>Jugador</th>
             <th>Construcción</th>
             <th>Técnico</th>
@@ -44,19 +44,27 @@
       const jugadores = await response.json();
 
       const tbody = document.querySelector("#rankingTable tbody");
-      tbody.innerHTML = ""; // limpiar antes de cargar
+      tbody.innerHTML = "";
 
-      // Insertar jugadores en la tabla
       jugadores.forEach(j => {
         const fila = document.createElement("tr");
+
+        // Detectar si es premium (puedes ajustar esta lógica)
+        const esPremium = /^[A-Za-z0-9_]{3,16}$/.test(j.nombre) && !j.nombre.startsWith("Jugador");
+
+        const urlSkin = esPremium
+          ? `https://mc-heads.net/avatar/${j.nombre}.png?overlay`
+          : `steve.png`; // agrega una imagen llamada steve.png en la misma carpeta
+
         fila.innerHTML = `
-          <td></td>
+          <td><img src="${urlSkin}" alt="${j.nombre}" class="skin"></td>
           <td>${j.nombre}</td>
           <td>${j.construccion}</td>
           <td>${j.tecnico}</td>
           <td>${j.pvp}</td>
           <td>${j.total}</td>
         `;
+
         tbody.appendChild(fila);
       });
 
@@ -73,15 +81,10 @@
         return pointsB - pointsA;
       });
 
-      rows.forEach((row, index) => {
-        row.cells[0].innerText = index + 1; // posición
-        table.appendChild(row);
-      });
+      rows.forEach(row => table.appendChild(row));
     }
 
     window.onload = cargarJugadores;
   </script>
 </body>
 </html>
-
-
