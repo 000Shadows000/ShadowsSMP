@@ -1,10 +1,10 @@
 [
   { "nombre": "Shadows_000_",  "construccion": 1, "tecnico": 1,  "pvp": 1, "total": 3 },
   { "nombre": "ItsMC_000_",  "construccion": 0,  "tecnico": 0,  "pvp": 0,  "total": 0 },
-  { "nombre": "67yne",  "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
-  { "nombre": "Gotitas_809",  "construccion": 0,  "tecnico": 0, "pvp": 0,  "total": 0 },
-  { "nombre": "SamuelYTXP",  "construccion": 0,  "tecnico": 0,  "pvp": 0, "total": 0 },
   { "nombre": "Ryex_000_",  "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
+  { "nombre": "Jugador4",  "construccion": 0,  "tecnico": 0, "pvp": 0,  "total": 0 },
+  { "nombre": "Jugador5",  "construccion": 0,  "tecnico": 0,  "pvp": 0, "total": 0 },
+  { "nombre": "Jugador6",  "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
   { "nombre": "Jugador7",  "construccion": 0,  "tecnico": 0,  "pvp": 0,  "total": 0 },
   { "nombre": "Jugador8",  "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
   { "nombre": "Jugador9",  "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
@@ -32,6 +32,7 @@
   { "nombre": "Jugador29", "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 },
   { "nombre": "Jugador30", "construccion": 0, "tecnico": 0, "pvp": 0, "total": 0 }
 ]
+
 
 
 
