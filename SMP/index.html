@@ -38,53 +38,62 @@
     <p>© 2025 Shadows SMP</p>
   </footer>
 
-  <script>
-    async function cargarJugadores() {
-      const response = await fetch("jugadores.json");
-      const jugadores = await response.json();
+<script>
+  async function cargarJugadores() {
+    const response = await fetch("jugadores.json");
+    const jugadores = await response.json();
 
-      const tbody = document.querySelector("#rankingTable tbody");
-      tbody.innerHTML = "";
+    const tbody = document.querySelector("#rankingTable tbody");
+    tbody.innerHTML = "";
 
-      jugadores.forEach(j => {
-        const fila = document.createElement("tr");
+    for (const j of jugadores) {
+      const fila = document.createElement("tr");
 
-        // Detectar si es premium (puedes ajustar esta lógica)
-        const esPremium = /^[A-Za-z0-9_]{3,16}$/.test(j.nombre) && !j.nombre.startsWith("Jugador");
-
-        const urlSkin = esPremium
-          ? `https://mc-heads.net/avatar/${j.nombre}.png?overlay`
-          : `steve.png`; // agrega una imagen llamada steve.png en la misma carpeta
-
-        fila.innerHTML = `
-          <td><img src="${urlSkin}" alt="${j.nombre}" class="skin"></td>
-          <td>${j.nombre}</td>
-          <td>${j.construccion}</td>
-          <td>${j.tecnico}</td>
-          <td>${j.pvp}</td>
-          <td>${j.total}</td>
-        `;
-
-        tbody.appendChild(fila);
-      });
-
-      ordenarTabla();
+      const skinUrl = await obtenerSkinURL(j.nombre);
+      fila.innerHTML = `
+        <td><img src="${skinUrl}" alt="${j.nombre}" class="skin"></td>
+        <td>${j.nombre}</td>
+        <td>${j.construccion}</td>
+        <td>${j.tecnico}</td>
+        <td>${j.pvp}</td>
+        <td>${j.total}</td>
+      `;
+      tbody.appendChild(fila);
     }
 
-    function ordenarTabla() {
-      const table = document.getElementById("rankingTable").tBodies[0];
-      const rows = Array.from(table.rows);
+    ordenarTabla();
+  }
 
-      rows.sort((a, b) => {
-        const pointsA = parseInt(a.cells[5].innerText, 10);
-        const pointsB = parseInt(b.cells[5].innerText, 10);
-        return pointsB - pointsA;
-      });
+  async function obtenerSkinURL(nombre) {
+    try {
+      // 1️⃣ Consulta al API oficial de Mojang para ver si el jugador existe
+      const res = await fetch(`https://api.mojang.com/users/profiles/minecraft/${nombre}`);
+      if (!res.ok) throw new Error("No premium");
+      const data = await res.json();
 
-      rows.forEach(row => table.appendChild(row));
+      // 2️⃣ Si existe, usa su skin desde mc-heads (con overlay activado)
+      return `https://mc-heads.net/avatar/${data.name}.png?overlay`;
+    } catch {
+      // 3️⃣ Si no existe (no premium), usa tu imagen local de Steve
+      return "steve.png";
     }
+  }
 
-    window.onload = cargarJugadores;
-  </script>
+  function ordenarTabla() {
+    const table = document.getElementById("rankingTable").tBodies[0];
+    const rows = Array.from(table.rows);
+
+    rows.sort((a, b) => {
+      const pointsA = parseInt(a.cells[5].innerText, 10);
+      const pointsB = parseInt(b.cells[5].innerText, 10);
+      return pointsB - pointsA;
+    });
+
+    rows.forEach(row => table.appendChild(row));
+  }
+
+  window.onload = cargarJugadores;
+</script>
 </body>
 </html>
+
