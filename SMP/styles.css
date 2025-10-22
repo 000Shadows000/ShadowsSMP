@@ -87,3 +87,15 @@ footer {
 .header-logos .ranking {
   max-width: 250px; /* achica la de Ranking */
 }
+.skin {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(121, 51, 171, 0.8);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skin:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 16px rgba(178, 0, 255, 0.9);
+}
