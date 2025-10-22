@@ -48,8 +48,8 @@
 
     for (const j of jugadores) {
       const fila = document.createElement("tr");
+      const skinUrl = await verificarSkin(`https://mc-heads.net/avatar/${j.nombre}.png?overlay`);
 
-      const skinUrl = await obtenerSkinURL(j.nombre);
       fila.innerHTML = `
         <td><img src="${skinUrl}" alt="${j.nombre}" class="skin"></td>
         <td>${j.nombre}</td>
@@ -64,17 +64,12 @@
     ordenarTabla();
   }
 
-  async function obtenerSkinURL(nombre) {
+  async function verificarSkin(url) {
     try {
-      // 1️⃣ Consulta al API oficial de Mojang para ver si el jugador existe
-      const res = await fetch(`https://api.mojang.com/users/profiles/minecraft/${nombre}`);
-      if (!res.ok) throw new Error("No premium");
-      const data = await res.json();
-
-      // 2️⃣ Si existe, usa su skin desde mc-heads (con overlay activado)
-      return `https://mc-heads.net/avatar/${data.name}.png?overlay`;
+      const res = await fetch(url, { method: "HEAD" });
+      if (res.ok) return url; // la skin existe
+      return "steve.png";
     } catch {
-      // 3️⃣ Si no existe (no premium), usa tu imagen local de Steve
       return "steve.png";
     }
   }
@@ -96,4 +91,5 @@
 </script>
 </body>
 </html>
+
 
