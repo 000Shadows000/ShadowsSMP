@@ -92,9 +92,29 @@
   }
 
   window.onload = cargarJugadores;
+  function ordenarTabla() {
+    const table = document.getElementById("rankingTable").tBodies[0];
+    const rows = Array.from(table.rows);
+
+    rows.sort((a, b) => {
+      const pointsA = parseInt(a.cells[5].innerText, 10);
+      const pointsB = parseInt(b.cells[5].innerText, 10);
+      return pointsB - pointsA;
+    });
+
+    // Reasignar posiciones y clases
+    rows.forEach((row, index) => {
+      row.classList.remove("top1", "top2", "top3");
+      if (index === 0) row.classList.add("top1");
+      else if (index === 1) row.classList.add("top2");
+      else if (index === 2) row.classList.add("top3");
+      table.appendChild(row);
+    });
+  }
 </script>
 </body>
 </html>
+
 
 
 
