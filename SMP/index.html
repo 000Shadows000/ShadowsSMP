@@ -81,8 +81,8 @@
           j.total = (j.pvp || 0) + (j.construccion || 0) + (j.tecnico || 0);
 
           const fila = document.createElement("tr");
-          const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}.png?overlay`;
-          const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}.png`;
+          const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}`;
+          const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}`;
 
           // Crear celda de imagen de manera segura para manejar fallback
           const tdImg = document.createElement("td");
@@ -252,3 +252,4 @@
   </script>
 </body>
 </html>
+
