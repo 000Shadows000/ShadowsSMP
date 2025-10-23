@@ -63,8 +63,8 @@
       jugadores.forEach(j => {
         const fila = document.createElement("tr");
 
-        const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}.png?overlay`;
-        const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}.png`;
+        const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}`;
+        const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}`;
 
         fila.innerHTML = `
           <td><img src="${skin}" alt="${j.nombre}" class="skin"></td>
@@ -174,3 +174,4 @@
   </script>
 </body>
 </html>
+
