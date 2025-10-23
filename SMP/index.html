@@ -20,31 +20,27 @@
   </header>
 
   <main>
-    <section>
-      <table id="rankingTable" aria-describedby="ranking-description">
-        <caption id="ranking-description" style="display:none">Tabla de ranking de jugadores</caption>
-        <thead>
-          <tr>
-            <th>Skin</th>
-            <th>Jugador</th>
-            <th>Construcción</th>
-            <th>Técnico</th>
-            <th>PvP</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- filas generadas -->
-        </tbody>
-      </table>
-    </section>
+    <table id="rankingTable" aria-describedby="ranking-description">
+      <caption id="ranking-description" style="display:none">Ranking de jugadores</caption>
+      <thead>
+        <tr>
+          <th>Skin</th>
+          <th>Jugador</th>
+          <th>Construcción</th>
+          <th>Técnico</th>
+          <th>PvP</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </main>
 
   <footer>
     <p>© 2025 Shadows SMP</p>
   </footer>
 
-  <!-- MODAL RESPONSIVE -->
+  <!-- MODAL -->
   <div id="modal" class="modal" aria-hidden="true">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="playerName">
       <span class="close" aria-label="Cerrar">&times;</span>
@@ -67,61 +63,52 @@
   <script>
     let chartInstance = null;
 
-    // Cargar y renderizar jugadores
+    // Cargar jugadores y calcular total
     async function cargarJugadores() {
-      try {
-        const response = await fetch("jugadores.json");
-        const jugadores = await response.json();
+      const response = await fetch("jugadores.json");
+      const jugadores = await response.json();
 
-        const tbody = document.querySelector("#rankingTable tbody");
-        tbody.innerHTML = "";
+      const tbody = document.querySelector("#rankingTable tbody");
+      tbody.innerHTML = "";
 
-        jugadores.forEach(j => {
-          // Calcular total automáticamente (pvp + construccion + tecnico)
-          j.total = (j.pvp || 0) + (j.construccion || 0) + (j.tecnico || 0);
+      jugadores.forEach(j => {
+        j.total = (j.pvp || 0) + (j.construccion || 0) + (j.tecnico || 0);
 
-          const fila = document.createElement("tr");
-          const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}`;
-          const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}`;
+        const fila = document.createElement("tr");
+        const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}.png?overlay`;
+        const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}.png`;
 
-          // Crear celda de imagen de manera segura para manejar fallback
-          const tdImg = document.createElement("td");
-          const img = document.createElement("img");
-          img.src = skin;
-          img.alt = j.nombre;
-          img.className = "skin";
-          img.onerror = () => { img.src = "steve.png"; };
-          tdImg.appendChild(img);
+        const tdImg = document.createElement("td");
+        const img = document.createElement("img");
+        img.src = skin;
+        img.alt = j.nombre;
+        img.className = "skin";
+        img.onerror = () => { img.src = "steve.png"; };
+        tdImg.appendChild(img);
 
-          // Rellenar fila
-          fila.appendChild(tdImg);
-          fila.innerHTML += `
-            <td class="jugador-nombre">${escapeHtml(j.nombre)}</td>
-            <td>${Number(j.construccion || 0)}</td>
-            <td>${Number(j.tecnico || 0)}</td>
-            <td>${Number(j.pvp || 0)}</td>
-            <td>${Number(j.total)}</td>
-          `;
+        fila.appendChild(tdImg);
+        fila.innerHTML += `
+          <td class="jugador-nombre">${escapeHtml(j.nombre)}</td>
+          <td>${Number(j.construccion || 0)}</td>
+          <td>${Number(j.tecnico || 0)}</td>
+          <td>${Number(j.pvp || 0)}</td>
+          <td>${Number(j.total)}</td>
+        `;
 
-          // Click para abrir modal con datos
-          fila.addEventListener("click", () => abrirModal(j, cuerpo));
-          tbody.appendChild(fila);
-        });
+        fila.addEventListener("click", () => abrirModal(j, cuerpo));
+        tbody.appendChild(fila);
+      });
 
-        ordenarTabla();
-      } catch (err) {
-        console.error("Error al cargar jugadores:", err);
-      }
+      ordenarTabla();
     }
 
-    // Ordenar la tabla por total (desc)
     function ordenarTabla() {
       const table = document.getElementById("rankingTable").tBodies[0];
       const rows = Array.from(table.rows);
 
       rows.sort((a, b) => {
-        const A = parseInt(a.cells[5].innerText || "0", 10);
-        const B = parseInt(b.cells[5].innerText || "0", 10);
+        const A = parseInt(a.cells[5].innerText);
+        const B = parseInt(b.cells[5].innerText);
         return B - A;
       });
 
@@ -134,7 +121,6 @@
       });
     }
 
-    // Abrir modal y crear Chart.js (radar)
     function abrirModal(jugador, cuerpoURL) {
       const modal = document.getElementById("modal");
       const nameEl = document.getElementById("playerName");
@@ -142,15 +128,12 @@
       const statsValues = document.getElementById("statsValues");
       const ctx = document.getElementById("statsChart");
 
-      // Nombre e imagen (fallback)
       nameEl.textContent = jugador.nombre;
       bodyEl.src = cuerpoURL;
       bodyEl.onerror = () => { bodyEl.src = "steve.png"; };
 
-      // recalcula total para asegurarse que está sincronizado
       jugador.total = (jugador.pvp || 0) + (jugador.construccion || 0) + (jugador.tecnico || 0);
 
-      // Datos para el radar (orden: Potencial, Precisión, Adaptabilidad, PvP, Construcción, Técnico)
       const stats = [
         Number(jugador.potencial || 0),
         Number(jugador.precision || 0),
@@ -161,60 +144,59 @@
       ];
       const labels = ["Potencial", "Precisión", "Adaptabilidad", "PvP", "Construcción", "Técnico"];
 
-      // destruir chart previo si existe
       if (chartInstance) {
         chartInstance.destroy();
         chartInstance = null;
       }
 
       chartInstance = new Chart(ctx, {
-  type: "radar",
-  data: {
-    labels,
-    datasets: [{
-      label: "Estadísticas",
-      data: stats,
-      backgroundColor: "rgba(121,51,171,0.35)",
-      borderColor: "#b200ff",
-      borderWidth: 2,
-      pointBackgroundColor: "#b200ff",
-      pointRadius: 5,
-      pointHoverRadius: 8,
-      pointHoverBackgroundColor: "#fff"
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        angleLines: { color: "#333" },
-        grid: { color: "#444" },
-        pointLabels: { color: "#ccc", font: { size: 12 } },
-        ticks: {
-          display: false,
-          beginAtZero: true
-        }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "rgba(0,0,0,0.8)",
-        titleFont: { size: 13, weight: "bold" },
-        bodyFont: { size: 12 },
-        callbacks: {
-          label: function(context) {
-            return `${context.label}: ${context.formattedValue}`;
+        type: "radar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Estadísticas",
+            data: stats,
+            backgroundColor: "rgba(121,51,171,0.35)",
+            borderColor: "#b200ff",
+            borderWidth: 2,
+            pointBackgroundColor: "#b200ff",
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: "#fff"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: "#333" },
+              grid: { color: "#444" },
+              pointLabels: { color: "#ccc", font: { size: 12 } },
+              ticks: { display: false, beginAtZero: true, max: 100 }
             }
-          }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              backgroundColor: "rgba(0,0,0,0.85)",
+              borderColor: "#b200ff",
+              borderWidth: 1,
+              titleFont: { size: 13, weight: "bold" },
+              bodyFont: { size: 12 },
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.formattedValue}`;
+                }
+              }
+            }
+          },
+          elements: { point: { radius: 5, hoverRadius: 8 } }
         }
-      }
-    }
-  });
+      });
 
-      // Valores numéricos debajo del gráfico, incluido total calculado
       statsValues.innerHTML = `
         <p><b>Potencial:</b> ${stats[0]}</p>
         <p><b>Precisión:</b> ${stats[1]}</p>
@@ -225,16 +207,19 @@
         <p style="margin-top:8px;"><b>Total (PvP+Construcción+Técnico):</b> ${jugador.total}</p>
       `;
 
-      // mostrar modal y bloquear scroll de fondo
       modal.style.display = "flex";
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
 
-      // forzar resize de chart tras apertura para evitar problemas de render
-      setTimeout(() => { if (chartInstance) chartInstance.resize(); }, 60);
+      // Forzar re-render preciso
+      requestAnimationFrame(() => {
+        if (chartInstance) {
+          chartInstance.resize();
+          chartInstance.update();
+        }
+      });
     }
 
-    // Cerrar modal
     function cerrarModal() {
       const modal = document.getElementById("modal");
       modal.style.display = "none";
@@ -243,14 +228,9 @@
       if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
     }
 
-    // Eventos cierre
     document.querySelector(".close").onclick = cerrarModal;
-    window.addEventListener("click", (e) => {
-      if (e.target === document.getElementById("modal")) cerrarModal();
-    });
-    window.addEventListener("resize", () => { if (chartInstance) chartInstance.resize(); });
+    window.onclick = e => { if (e.target === document.getElementById("modal")) cerrarModal(); };
 
-    // Escapar texto para evitar inyección básica en la tabla
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
@@ -260,10 +240,7 @@
         .replaceAll("'", "&#039;");
     }
 
-    // Lanzar carga
     window.onload = cargarJugadores;
   </script>
 </body>
 </html>
-
-
