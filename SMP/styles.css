@@ -198,3 +198,10 @@ footer {
   .player-body { max-width: 120px; }
   .close { font-size: 22px; right: 8px; top: 6px; }
 }
+/* === Protección visual adicional === */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
