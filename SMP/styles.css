@@ -52,7 +52,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #232428;
+  background: #141414;
   transform: scale(1.01);
   box-shadow: 0 0 10px rgba(178, 0, 255, 0.3);
 }
@@ -73,7 +73,7 @@ td:last-child {
   border-bottom-right-radius: 10px;
 }
 
-/* === SKINS (sin cuadro alrededor) === */
+/* === SKINS SIN BORDE === */
 .skin {
   width: 46px;
   height: 46px;
@@ -87,18 +87,9 @@ td:last-child {
 }
 
 /* === TOP 3 === */
-tr.top1 {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), #18191c);
-  border-left: 4px solid #ffd700;
-}
-tr.top2 {
-  background: linear-gradient(90deg, rgba(192, 192, 192, 0.2), #18191c);
-  border-left: 4px solid #c0c0c0;
-}
-tr.top3 {
-  background: linear-gradient(90deg, rgba(205, 127, 50, 0.2), #18191c);
-  border-left: 4px solid #cd7f32;
-}
+tr.top1 { background: linear-gradient(90deg, rgba(255,215,0,0.2), #18191c); border-left: 4px solid #ffd700; }
+tr.top2 { background: linear-gradient(90deg, rgba(192,192,192,0.2), #18191c); border-left: 4px solid #c0c0c0; }
+tr.top3 { background: linear-gradient(90deg, rgba(205,127,50,0.2), #18191c); border-left: 4px solid #cd7f32; }
 
 /* === FOOTER === */
 footer {
@@ -108,7 +99,7 @@ footer {
   font-size: 0.9rem;
 }
 
-/* === MODAL === */
+/* === MODAL COMPACTO === */
 .modal {
   display: none;
   position: fixed;
@@ -117,75 +108,71 @@ footer {
   background-color: rgba(0,0,0,0.8);
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
 }
 
-/* Contenido del modal más pequeño y centrado */
 .modal-content {
   background: #1b1b1d;
-  padding: 18px;
+  padding: 16px 20px;
   border-radius: 14px;
   box-shadow: 0 0 20px rgba(178,0,255,0.5);
   width: 100%;
-  max-width: 750px;
+  max-width: 580px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 14px;
   position: relative;
-  animation: aparecer 0.3s ease;
+  animation: aparecer 0.25s ease;
 }
 
 @keyframes aparecer {
-  from { transform: scale(0.8); opacity: 0; }
+  from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Una sola columna en pantallas pequeñas */
 @media (max-width: 780px) {
   .modal-content {
     grid-template-columns: 1fr;
-    max-width: 95%;
-    padding: 15px;
+    max-width: 92%;
+    padding: 14px;
   }
 }
 
 .close {
   position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 28px;
+  right: 12px;
+  top: 8px;
+  font-size: 26px;
   color: #bbb;
   cursor: pointer;
 }
 .close:hover { color: #fff; }
 
-/* Cuerpo del jugador */
 .modal-left {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-}
-.player-body {
-  width: 100%;
-  max-width: 200px;
-  border-radius: 10px;
+  gap: 6px;
 }
 
-/* Lado derecho (gráfico) */
+.player-body {
+  width: 100%;
+  max-width: 160px;
+  border-radius: 8px;
+}
+
 .modal-right {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
-/* Canvas radar */
 .chart-wrap {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 400px;
+  max-width: 320px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,20 +183,18 @@ footer {
   height: 100% !important;
 }
 
-/* Valores numéricos */
 .stats-values {
   text-align: left;
   color: #ddd;
   width: 100%;
-  max-width: 400px;
+  max-width: 320px;
 }
 
 .stats-values p {
   margin: 4px 0;
 }
 
-/* Móvil */
 @media (max-width: 420px) {
-  .close { right: 10px; top: 8px; font-size: 24px; }
-  .player-body { max-width: 150px; }
+  .player-body { max-width: 120px; }
+  .close { font-size: 22px; right: 8px; top: 6px; }
 }
