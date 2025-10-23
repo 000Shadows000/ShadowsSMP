@@ -1,7 +1,7 @@
 /* === ESTILO BASE === */
 body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #141414;
+  background: #292929;
   color: #e5e5e5;
   margin: 0;
   padding: 0;
@@ -25,7 +25,7 @@ body {
   max-width: 250px;
 }
 
-/* === TABLA PRINCIPAL === */
+/* === TABLA === */
 table {
   width: 90%;
   max-width: 900px;
@@ -73,21 +73,20 @@ td:last-child {
   border-bottom-right-radius: 10px;
 }
 
-/* === SKINS === */
+/* === SKINS (sin cuadro alrededor) === */
 .skin {
   width: 46px;
   height: 46px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(121, 51, 171, 0.6);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: none;
+  transition: transform 0.2s ease;
 }
 
 .skin:hover {
   transform: scale(1.15);
-  box-shadow: 0 0 18px rgba(178, 0, 255, 0.9);
 }
 
-/* === POSICIONES DESTACADAS === */
+/* === TOP 3 === */
 tr.top1 {
   background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), #18191c);
   border-left: 4px solid #ffd700;
@@ -109,7 +108,7 @@ footer {
   font-size: 0.9rem;
 }
 
-/* === MODAL RESPONSIVE === */
+/* === MODAL === */
 .modal {
   display: none;
   position: fixed;
@@ -122,14 +121,14 @@ footer {
   overflow-y: auto;
 }
 
-/* Contenido del modal adaptable */
+/* Contenido del modal más pequeño y centrado */
 .modal-content {
   background: #1b1b1d;
-  padding: 20px;
+  padding: 18px;
   border-radius: 14px;
   box-shadow: 0 0 20px rgba(178,0,255,0.5);
   width: 100%;
-  max-width: 1000px;
+  max-width: 750px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -142,7 +141,7 @@ footer {
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Modal en pantallas pequeñas */
+/* Una sola columna en pantallas pequeñas */
 @media (max-width: 780px) {
   .modal-content {
     grid-template-columns: 1fr;
@@ -159,40 +158,34 @@ footer {
   color: #bbb;
   cursor: pointer;
 }
+.close:hover { color: #fff; }
 
-.close:hover {
-  color: #fff;
-}
-
-/* Columna izquierda */
+/* Cuerpo del jugador */
 .modal-left {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 }
-
-/* Imagen cuerpo */
 .player-body {
   width: 100%;
-  max-width: 260px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(121,51,171,0.25);
+  max-width: 200px;
+  border-radius: 10px;
 }
 
-/* Columna derecha */
+/* Lado derecho (gráfico) */
 .modal-right {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
 }
 
 /* Canvas radar */
 .chart-wrap {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 520px;
+  max-width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,15 +201,15 @@ footer {
   text-align: left;
   color: #ddd;
   width: 100%;
-  max-width: 520px;
+  max-width: 400px;
 }
 
 .stats-values p {
   margin: 4px 0;
 }
 
-/* Móvil: ajustes */
+/* Móvil */
 @media (max-width: 420px) {
   .close { right: 10px; top: 8px; font-size: 24px; }
-  .player-body { max-width: 180px; }
+  .player-body { max-width: 150px; }
 }
