@@ -242,6 +242,44 @@
 
     window.onload = cargarJugadores;
   </script>
+  <script>
+/* === 🛡️ Protección básica contra inspección y copia === */
+
+// Bloquear clic derecho
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+// Bloquear teclas comunes para inspeccionar
+document.onkeydown = e => {
+  if (e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && e.key === "U") ||
+      (e.ctrlKey && e.shiftKey && e.key === "C")) {
+    e.preventDefault();
+    return false;
+  }
+};
+
+// Bloquear selección y arrastre de texto
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+
+// Detectar apertura de DevTools
+(function detectDevTools() {
+  const threshold = 160; // tiempo de ejecución sospechoso
+  const check = () => {
+    const start = performance.now();
+    debugger;
+    const time = performance.now() - start;
+    if (time > threshold) {
+      document.body.innerHTML = "<div style='font-family:sans-serif;text-align:center;color:#b200ff;margin-top:20vh'><h1>⚠️ Acceso restringido</h1><p>Se ha detectado intento de inspección.</p></div>";
+    } else {
+      setTimeout(check, 1500);
+    }
+  };
+  check();
+})();
+</script>
 </body>
 </html>
+
 
