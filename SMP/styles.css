@@ -185,3 +185,61 @@ tr.top3 {
   background: linear-gradient(90deg, #cd7f3233, #18191c);
   border-left: 4px solid #cd7f32;
 }
+/* === MODAL EMERGENTE === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1b1b1d;
+  padding: 20px 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(178,0,255,0.6);
+  text-align: center;
+  width: 420px;
+  position: relative;
+  animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  color: #bbb;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #fff;
+}
+
+.player-body {
+  width: 90px;
+  margin: 10px auto;
+  display: block;
+}
+
+.stats-values {
+  text-align: left;
+  margin-top: 15px;
+  color: #ccc;
+}
+
+.stats-values p {
+  margin: 4px 0;
+}
