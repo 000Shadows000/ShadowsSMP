@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ranking Shadows SMP</title>
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -17,7 +21,8 @@
 
   <main>
     <section>
-      <table id="rankingTable">
+      <table id="rankingTable" aria-describedby="ranking-description">
+        <caption id="ranking-description" style="display:none">Tabla de ranking de jugadores</caption>
         <thead>
           <tr>
             <th>Skin</th>
@@ -29,7 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Se llena automáticamente -->
+          <!-- filas generadas -->
         </tbody>
       </table>
     </section>
@@ -39,60 +44,89 @@
     <p>© 2025 Shadows SMP</p>
   </footer>
 
-  <!-- 🌀 MODAL DE ESTADÍSTICAS -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2 id="playerName"></h2>
-      <img id="playerBody" class="player-body" src="" alt="Cuerpo del jugador">
-      <canvas id="statsChart" width="300" height="300"></canvas>
-      <div id="statsValues" class="stats-values"></div>
+  <!-- MODAL RESPONSIVE -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="playerName">
+      <span class="close" aria-label="Cerrar">&times;</span>
+
+      <div class="modal-left">
+        <h2 id="playerName" style="margin:0;color:#fff;"></h2>
+        <img id="playerBody" class="player-body" src="" alt="Cuerpo del jugador">
+      </div>
+
+      <div class="modal-right">
+        <div class="chart-wrap">
+          <canvas id="statsChart"></canvas>
+        </div>
+        <div id="statsValues" class="stats-values"></div>
+      </div>
     </div>
   </div>
 
+  <!-- SCRIPT PRINCIPAL -->
   <script>
     let chartInstance = null;
 
+    // Cargar y renderizar jugadores
     async function cargarJugadores() {
-      const response = await fetch("jugadores.json");
-      const jugadores = await response.json();
+      try {
+        const response = await fetch("jugadores.json");
+        const jugadores = await response.json();
 
-      const tbody = document.querySelector("#rankingTable tbody");
-      tbody.innerHTML = "";
+        const tbody = document.querySelector("#rankingTable tbody");
+        tbody.innerHTML = "";
 
-      jugadores.forEach(j => {
-        const fila = document.createElement("tr");
+        jugadores.forEach(j => {
+          // Calcular total automáticamente (pvp + construccion + tecnico)
+          j.total = (j.pvp || 0) + (j.construccion || 0) + (j.tecnico || 0);
 
-        const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}`;
-        const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}`;
+          const fila = document.createElement("tr");
+          const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}.png?overlay`;
+          const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}.png`;
 
-        fila.innerHTML = `
-          <td><img src="${skin}" alt="${j.nombre}" class="skin"></td>
-          <td class="jugador-nombre">${j.nombre}</td>
-          <td>${j.construccion}</td>
-          <td>${j.tecnico}</td>
-          <td>${j.pvp}</td>
-          <td>${j.total}</td>
-        `;
+          // Crear celda de imagen de manera segura para manejar fallback
+          const tdImg = document.createElement("td");
+          const img = document.createElement("img");
+          img.src = skin;
+          img.alt = j.nombre;
+          img.className = "skin";
+          img.onerror = () => { img.src = "steve.png"; };
+          tdImg.appendChild(img);
 
-        fila.addEventListener("click", () => abrirModal(j, cuerpo));
-        tbody.appendChild(fila);
-      });
+          // Rellenar fila
+          fila.appendChild(tdImg);
+          fila.innerHTML += `
+            <td class="jugador-nombre">${escapeHtml(j.nombre)}</td>
+            <td>${Number(j.construccion || 0)}</td>
+            <td>${Number(j.tecnico || 0)}</td>
+            <td>${Number(j.pvp || 0)}</td>
+            <td>${Number(j.total)}</td>
+          `;
 
-      ordenarTabla();
+          // Click para abrir modal con datos
+          fila.addEventListener("click", () => abrirModal(j, cuerpo));
+          tbody.appendChild(fila);
+        });
+
+        ordenarTabla();
+      } catch (err) {
+        console.error("Error al cargar jugadores:", err);
+      }
     }
 
+    // Ordenar la tabla por total (desc)
     function ordenarTabla() {
       const table = document.getElementById("rankingTable").tBodies[0];
       const rows = Array.from(table.rows);
 
       rows.sort((a, b) => {
-        const A = parseInt(a.cells[5].innerText);
-        const B = parseInt(b.cells[5].innerText);
+        const A = parseInt(a.cells[5].innerText || "0", 10);
+        const B = parseInt(b.cells[5].innerText || "0", 10);
         return B - A;
       });
 
       rows.forEach((r, i) => {
+        r.classList.remove("top1", "top2", "top3");
         if (i === 0) r.classList.add("top1");
         else if (i === 1) r.classList.add("top2");
         else if (i === 2) r.classList.add("top3");
@@ -100,29 +134,39 @@
       });
     }
 
+    // Abrir modal y crear Chart.js (radar)
     function abrirModal(jugador, cuerpoURL) {
       const modal = document.getElementById("modal");
       const nameEl = document.getElementById("playerName");
       const bodyEl = document.getElementById("playerBody");
       const statsValues = document.getElementById("statsValues");
+      const ctx = document.getElementById("statsChart");
 
+      // Nombre e imagen (fallback)
       nameEl.textContent = jugador.nombre;
       bodyEl.src = cuerpoURL;
+      bodyEl.onerror = () => { bodyEl.src = "steve.png"; };
 
+      // recalcula total para asegurarse que está sincronizado
+      jugador.total = (jugador.pvp || 0) + (jugador.construccion || 0) + (jugador.tecnico || 0);
+
+      // Datos para el radar (orden: Potencial, Precisión, Adaptabilidad, PvP, Construcción, Técnico)
       const stats = [
-        jugador.potencial || jugador.construccion,
-        jugador.precision || jugador.tecnico,
-        jugador.adaptabilidad || jugador.total / 2,
-        jugador.pvp,
-        jugador.construccion,
-        jugador.tecnico
+        Number(jugador.potencial || 0),
+        Number(jugador.precision || 0),
+        Number(jugador.adaptabilidad || 0),
+        Number(jugador.pvp || 0),
+        Number(jugador.construccion || 0),
+        Number(jugador.tecnico || 0)
       ];
-
       const labels = ["Potencial", "Precisión", "Adaptabilidad", "PvP", "Construcción", "Técnico"];
 
-      if (chartInstance) chartInstance.destroy();
+      // destruir chart previo si existe
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
 
-      const ctx = document.getElementById("statsChart");
       chartInstance = new Chart(ctx, {
         type: "radar",
         data: {
@@ -130,25 +174,34 @@
           datasets: [{
             label: "Estadísticas",
             data: stats,
-            backgroundColor: "rgba(121, 51, 171, 0.4)",
+            backgroundColor: "rgba(121,51,171,0.35)",
             borderColor: "#b200ff",
             borderWidth: 2,
-            pointBackgroundColor: "#fff"
+            pointBackgroundColor: "#fff",
+            pointRadius: 4,
+            pointHoverRadius: 6
           }]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             r: {
-              angleLines: { color: "#444" },
-              grid: { color: "#555" },
-              pointLabels: { color: "#ccc", font: { size: 13 } },
-              ticks: { color: "#999", stepSize: 1, beginAtZero: true, max: 10 }
+              angleLines: { color: "#333" },
+              grid: { color: "#444" },
+              pointLabels: { color: "#ccc", font: { size: 12 } },
+              ticks: {
+                display: false,
+                beginAtZero: true
+                // Puedes setear max aquí si trabajas con un rango fijo
+              }
             }
           },
           plugins: { legend: { display: false } }
         }
       });
 
+      // Valores numéricos debajo del gráfico, incluido total calculado
       statsValues.innerHTML = `
         <p><b>Potencial:</b> ${stats[0]}</p>
         <p><b>Precisión:</b> ${stats[1]}</p>
@@ -156,22 +209,46 @@
         <p><b>PvP:</b> ${stats[3]}</p>
         <p><b>Construcción:</b> ${stats[4]}</p>
         <p><b>Técnico:</b> ${stats[5]}</p>
+        <p style="margin-top:8px;"><b>Total (PvP+Construcción+Técnico):</b> ${jugador.total}</p>
       `;
 
+      // mostrar modal y bloquear scroll de fondo
       modal.style.display = "flex";
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+
+      // forzar resize de chart tras apertura para evitar problemas de render
+      setTimeout(() => { if (chartInstance) chartInstance.resize(); }, 60);
     }
 
-    document.querySelector(".close").onclick = () => {
-      document.getElementById("modal").style.display = "none";
-    };
+    // Cerrar modal
+    function cerrarModal() {
+      const modal = document.getElementById("modal");
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    }
 
-    window.onclick = e => {
-      if (e.target === document.getElementById("modal"))
-        document.getElementById("modal").style.display = "none";
-    };
+    // Eventos cierre
+    document.querySelector(".close").onclick = cerrarModal;
+    window.addEventListener("click", (e) => {
+      if (e.target === document.getElementById("modal")) cerrarModal();
+    });
+    window.addEventListener("resize", () => { if (chartInstance) chartInstance.resize(); });
 
+    // Escapar texto para evitar inyección básica en la tabla
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // Lanzar carga
     window.onload = cargarJugadores;
   </script>
 </body>
 </html>
-
