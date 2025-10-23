@@ -1,7 +1,7 @@
 [
-  { "nombre": "Jugador1",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
-  { "nombre": "Jugador2",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
-  { "nombre": "Jugador3",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
+  { "nombre": "Shadows_000_",  "potencial": 100, "precision": 0, "adaptabilidad": 95, "pvp": 50, "construccion": 97, "tecnico": 93, "total": 0 },
+  { "nombre": "ItsMC_000_",  "potencial": 100, "precision": 0, "adaptabilidad": 90, "pvp": 75, "construccion": 84, "tecnico": 90, "total": 0 },
+  { "nombre": "Ryex_000_",  "potencial": 100, "precision": 0, "adaptabilidad": 87, "pvp": 68, "construccion": 72, "tecnico": 74, "total": 0 },
   { "nombre": "Jugador4",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
   { "nombre": "Jugador5",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
   { "nombre": "Jugador6",  "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
@@ -32,3 +32,4 @@
   { "nombre": "Jugador29", "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 },
   { "nombre": "Jugador30", "potencial": 0, "precision": 0, "adaptabilidad": 0, "pvp": 0, "construccion": 0, "tecnico": 0, "total": 0 }
 ]
+
