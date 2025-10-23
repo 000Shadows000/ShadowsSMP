@@ -168,38 +168,51 @@
       }
 
       chartInstance = new Chart(ctx, {
-        type: "radar",
-        data: {
-          labels,
-          datasets: [{
-            label: "Estadísticas",
-            data: stats,
-            backgroundColor: "rgba(121,51,171,0.35)",
-            borderColor: "#b200ff",
-            borderWidth: 2,
-            pointBackgroundColor: "#fff",
-            pointRadius: 4,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              angleLines: { color: "#333" },
-              grid: { color: "#444" },
-              pointLabels: { color: "#ccc", font: { size: 12 } },
-              ticks: {
-                display: false,
-                beginAtZero: true
-                // Puedes setear max aquí si trabajas con un rango fijo
-              }
-            }
-          },
-          plugins: { legend: { display: false } }
+  type: "radar",
+  data: {
+    labels,
+    datasets: [{
+      label: "Estadísticas",
+      data: stats,
+      backgroundColor: "rgba(121,51,171,0.35)",
+      borderColor: "#b200ff",
+      borderWidth: 2,
+      pointBackgroundColor: "#b200ff",
+      pointRadius: 5,
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: "#fff"
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        angleLines: { color: "#333" },
+        grid: { color: "#444" },
+        pointLabels: { color: "#ccc", font: { size: 12 } },
+        ticks: {
+          display: false,
+          beginAtZero: true
         }
-      });
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "rgba(0,0,0,0.8)",
+        titleFont: { size: 13, weight: "bold" },
+        bodyFont: { size: 12 },
+        callbacks: {
+          label: function(context) {
+            return `${context.label}: ${context.formattedValue}`;
+            }
+          }
+        }
+      }
+    }
+  });
 
       // Valores numéricos debajo del gráfico, incluido total calculado
       statsValues.innerHTML = `
@@ -252,4 +265,5 @@
   </script>
 </body>
 </html>
+
 
