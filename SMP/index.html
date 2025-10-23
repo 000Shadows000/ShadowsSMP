@@ -243,43 +243,64 @@
     window.onload = cargarJugadores;
   </script>
   <script>
-/* === 🛡️ Protección básica contra inspección y copia === */
+/* === Protección avanzada Shadows === */
 
 // Bloquear clic derecho
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// Bloquear teclas comunes para inspeccionar
-document.onkeydown = e => {
-  if (e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && e.key === "U") ||
-      (e.ctrlKey && e.shiftKey && e.key === "C")) {
+// Bloquear teclas sospechosas
+document.onkeydown = function(e) {
+  if (
+    e.key === "F12" ||
+    e.key === "PrintScreen" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && ["U","S","P","A"].includes(e.key.toUpperCase())) ||
+    (e.metaKey && ["U","S","P"].includes(e.key.toUpperCase()))
+  ) {
     e.preventDefault();
+    e.stopPropagation();
     return false;
   }
 };
 
-// Bloquear selección y arrastre de texto
-document.addEventListener("selectstart", e => e.preventDefault());
-document.addEventListener("dragstart", e => e.preventDefault());
+// Desactivar selección, copia, arrastre
+["copy","cut","paste","selectstart","dragstart","contextmenu"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-// Detectar apertura de DevTools
+// Bloquear impresión
+window.addEventListener("beforeprint", e => {
+  alert("La impresión está deshabilitada.");
+  e.preventDefault();
+  return false;
+});
+
+// Detección de DevTools
 (function detectDevTools() {
-  const threshold = 160; // tiempo de ejecución sospechoso
+  const threshold = 150;
   const check = () => {
     const start = performance.now();
     debugger;
     const time = performance.now() - start;
     if (time > threshold) {
-      document.body.innerHTML = "<div style='font-family:sans-serif;text-align:center;color:#b200ff;margin-top:20vh'><h1>⚠️ Acceso restringido</h1><p>Se ha detectado intento de inspección.</p></div>";
+      document.body.innerHTML = "<div style='font-family:sans-serif;text-align:center;color:#b200ff;margin-top:20vh'><h1>⚠️ Acceso restringido</h1><p>Intento de inspección detectado.</p></div>";
     } else {
-      setTimeout(check, 1500);
+      setTimeout(check, 1000);
     }
   };
   check();
 })();
+
+// Impedir capturas de pantalla con teclas o combinaciones comunes
+window.addEventListener("keyup", function(e){
+  if (e.key === "PrintScreen") {
+    navigator.clipboard.writeText("");
+    alert("Capturas deshabilitadas.");
+  }
+});
 </script>
 </body>
 </html>
+
 
 
