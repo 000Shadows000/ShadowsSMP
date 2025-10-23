@@ -99,3 +99,89 @@ footer {
   transform: scale(1.15);
   box-shadow: 0 0 16px rgba(178, 0, 255, 0.9);
 }
+/* === ESTILO BASE AL TIPO MCTIERS === */
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #0f1012;
+  color: #e5e5e5;
+  margin: 0;
+  padding: 0;
+}
+
+/* === TABLA === */
+table {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+thead th {
+  background: #3e006d;
+  color: #fff;
+  padding: 14px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tbody tr {
+  background: #18191c;
+  transition: all 0.25s ease;
+  border-radius: 10px;
+}
+
+tbody tr:hover {
+  background: #232428;
+  transform: scale(1.01);
+  box-shadow: 0 0 10px rgba(130, 0, 255, 0.3);
+}
+
+td {
+  padding: 12px 10px;
+  text-align: center;
+}
+
+td:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+td:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* === SKINS === */
+.skin {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(121, 51, 171, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skin:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(170, 0, 255, 0.9);
+}
+
+/* === CABECERA === */
+.header-logos img {
+  max-width: 420px;
+  height: auto;
+}
+tr.top1 {
+  background: linear-gradient(90deg, #ffd70033, #18191c);
+  border-left: 4px solid #ffd700;
+}
+tr.top2 {
+  background: linear-gradient(90deg, #c0c0c033, #18191c);
+  border-left: 4px solid #c0c0c0;
+}
+tr.top3 {
+  background: linear-gradient(90deg, #cd7f3233, #18191c);
+  border-left: 4px solid #cd7f32;
+}
