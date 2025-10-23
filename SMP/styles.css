@@ -1,114 +1,31 @@
-/* Fondo general */
+/* === ESTILO BASE === */
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #222224, #37383b);
-  color: #fff;
-  text-align: center;
+  color: #e5e5e5;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
-/* Título */
-h1 {
-  margin: 20px 0;
-  font-size: 2.5rem;
-  color: #7933ab;
-  text-shadow: 0 0 8px rgba(178, 0, 178, 0.7);
-}
-
-/* Tabla */
-table {
-  width: 90%;
-  max-width: 800px;
-  margin: 20px auto;
-  border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-
-th {
-  background: #3b014f;
-  color: #fff;
-  font-size: 1.1rem;
-}
-
-tr:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-/* Posiciones destacadas */
-.oro {
-  background: rgba(255, 215, 0, 0.3);
-  font-weight: bold;
-}
-.plata {
-  background: rgba(192, 192, 192, 0.3);
-  font-weight: bold;
-}
-.bronce {
-  background: rgba(205, 127, 50, 0.3);
-  font-weight: bold;
-}
-
-/* Footer */
-footer {
-  margin-top: 30px;
-  padding: 10px;
-  background: #131214;
-  font-size: 0.9rem;
-}
+/* === ENCABEZADO === */
 .header-logos {
   display: flex;
-  flex-direction: column; /* una arriba de la otra */
-  align-items: center; /* centrado */
+  flex-direction: column;
+  align-items: center;
   margin: 20px 0;
 }
 
-.header-logos img {
-  max-width: 400px; /* ajusta el tamaño */
-  height: auto;
-}
-
 .header-logos .logo {
-  margin-bottom: 10px; /* espacio entre ambas */
-}
-.header-logos .logo {
-  max-width: 800px; /* tamaño del logo principal */
+  max-width: 800px;
   margin-bottom: 10px;
 }
 
 .header-logos .ranking {
-  max-width: 250px; /* achica la de Ranking */
-}
-.skin {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(121, 51, 171, 0.8);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 250px;
 }
 
-.skin:hover {
-  transform: scale(1.15);
-  box-shadow: 0 0 16px rgba(178, 0, 255, 0.9);
-}
-/* === ESTILO BASE AL TIPO MCTIERS === */
-body {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #0f1012;
-  color: #e5e5e5;
-  margin: 0;
-  padding: 0;
-}
-
-/* === TABLA === */
+/* === TABLA PRINCIPAL === */
 table {
   width: 90%;
   max-width: 900px;
@@ -118,14 +35,14 @@ table {
 }
 
 thead th {
-  background: #3e006d;
+  background: #3b014f;
   color: #fff;
   padding: 14px;
-  border-radius: 8px 8px 0 0;
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-radius: 8px;
 }
 
 tbody tr {
@@ -137,18 +54,20 @@ tbody tr {
 tbody tr:hover {
   background: #232428;
   transform: scale(1.01);
-  box-shadow: 0 0 10px rgba(130, 0, 255, 0.3);
+  box-shadow: 0 0 10px rgba(178, 0, 255, 0.3);
 }
 
 td {
   padding: 12px 10px;
   text-align: center;
+  color: #e5e5e5;
 }
 
 td:first-child {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
+
 td:last-child {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -156,56 +75,64 @@ td:last-child {
 
 /* === SKINS === */
 .skin {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(121, 51, 171, 0.6);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .skin:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(170, 0, 255, 0.9);
+  transform: scale(1.15);
+  box-shadow: 0 0 18px rgba(178, 0, 255, 0.9);
 }
 
-/* === CABECERA === */
-.header-logos img {
-  max-width: 420px;
-  height: auto;
-}
+/* === POSICIONES DESTACADAS === */
 tr.top1 {
-  background: linear-gradient(90deg, #ffd70033, #18191c);
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), #18191c);
   border-left: 4px solid #ffd700;
 }
 tr.top2 {
-  background: linear-gradient(90deg, #c0c0c033, #18191c);
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.2), #18191c);
   border-left: 4px solid #c0c0c0;
 }
 tr.top3 {
-  background: linear-gradient(90deg, #cd7f3233, #18191c);
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.2), #18191c);
   border-left: 4px solid #cd7f32;
 }
-/* === MODAL EMERGENTE === */
+
+/* === FOOTER === */
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  background: #131214;
+  font-size: 0.9rem;
+}
+
+/* === MODAL RESPONSIVE === */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0,0,0,0.8);
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  overflow-y: auto;
 }
 
+/* Contenido del modal adaptable */
 .modal-content {
   background: #1b1b1d;
-  padding: 20px 30px;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(178,0,255,0.6);
-  text-align: center;
-  width: 420px;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(178,0,255,0.5);
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   position: relative;
   animation: aparecer 0.3s ease;
 }
@@ -213,6 +140,15 @@ tr.top3 {
 @keyframes aparecer {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* Modal en pantallas pequeñas */
+@media (max-width: 780px) {
+  .modal-content {
+    grid-template-columns: 1fr;
+    max-width: 95%;
+    padding: 15px;
+  }
 }
 
 .close {
@@ -228,18 +164,59 @@ tr.top3 {
   color: #fff;
 }
 
-.player-body {
-  width: 90px;
-  margin: 10px auto;
-  display: block;
+/* Columna izquierda */
+.modal-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
+/* Imagen cuerpo */
+.player-body {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(121,51,171,0.25);
+}
+
+/* Columna derecha */
+.modal-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Canvas radar */
+.chart-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#statsChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Valores numéricos */
 .stats-values {
   text-align: left;
-  margin-top: 15px;
-  color: #ccc;
+  color: #ddd;
+  width: 100%;
+  max-width: 520px;
 }
 
 .stats-values p {
   margin: 4px 0;
+}
+
+/* Móvil: ajustes */
+@media (max-width: 420px) {
+  .close { right: 10px; top: 8px; font-size: 24px; }
+  .player-body { max-width: 180px; }
 }
