@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ranking Shadows SMP</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
@@ -28,7 +29,7 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Aquí se insertarán los jugadores automáticamente -->
+          <!-- Se llena automáticamente -->
         </tbody>
       </table>
     </section>
@@ -38,84 +39,138 @@
     <p>© 2025 Shadows SMP</p>
   </footer>
 
-<script>
-  async function cargarJugadores() {
-    const response = await fetch("jugadores.json");
-    const jugadores = await response.json();
+  <!-- 🌀 MODAL DE ESTADÍSTICAS -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="playerName"></h2>
+      <img id="playerBody" class="player-body" src="" alt="Cuerpo del jugador">
+      <canvas id="statsChart" width="300" height="300"></canvas>
+      <div id="statsValues" class="stats-values"></div>
+    </div>
+  </div>
 
-    const tbody = document.querySelector("#rankingTable tbody");
-    tbody.innerHTML = "";
+  <script>
+    let chartInstance = null;
 
-    for (const j of jugadores) {
-      const fila = document.createElement("tr");
+    async function cargarJugadores() {
+      const response = await fetch("jugadores.json");
+      const jugadores = await response.json();
 
-      // Genera el link de la skin según el nombre del jugador
-      const skinUrl = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}`;
+      const tbody = document.querySelector("#rankingTable tbody");
+      tbody.innerHTML = "";
 
-      // Crea la imagen y maneja error si no carga (usa steve.png)
-      const img = document.createElement("img");
-      img.src = skinUrl;
-      img.alt = j.nombre;
-      img.className = "skin";
-      img.onerror = () => { img.src = "steve.png"; };
+      jugadores.forEach(j => {
+        const fila = document.createElement("tr");
 
-      // Construye la fila
-      const tdSkin = document.createElement("td");
-      tdSkin.appendChild(img);
+        const skin = `https://mc-heads.net/avatar/${encodeURIComponent(j.nombre)}.png?overlay`;
+        const cuerpo = `https://mc-heads.net/body/${encodeURIComponent(j.nombre)}.png`;
 
-      fila.appendChild(tdSkin);
-      fila.innerHTML += `
-        <td>${j.nombre}</td>
-        <td>${j.construccion}</td>
-        <td>${j.tecnico}</td>
-        <td>${j.pvp}</td>
-        <td>${j.total}</td>
-      `;
+        fila.innerHTML = `
+          <td><img src="${skin}" alt="${j.nombre}" class="skin"></td>
+          <td class="jugador-nombre">${j.nombre}</td>
+          <td>${j.construccion}</td>
+          <td>${j.tecnico}</td>
+          <td>${j.pvp}</td>
+          <td>${j.total}</td>
+        `;
 
-      tbody.appendChild(fila);
+        fila.addEventListener("click", () => abrirModal(j, cuerpo));
+        tbody.appendChild(fila);
+      });
+
+      ordenarTabla();
     }
 
-    ordenarTabla();
-  }
+    function ordenarTabla() {
+      const table = document.getElementById("rankingTable").tBodies[0];
+      const rows = Array.from(table.rows);
 
-  function ordenarTabla() {
-    const table = document.getElementById("rankingTable").tBodies[0];
-    const rows = Array.from(table.rows);
+      rows.sort((a, b) => {
+        const A = parseInt(a.cells[5].innerText);
+        const B = parseInt(b.cells[5].innerText);
+        return B - A;
+      });
 
-    rows.sort((a, b) => {
-      const pointsA = parseInt(a.cells[5].innerText, 10);
-      const pointsB = parseInt(b.cells[5].innerText, 10);
-      return pointsB - pointsA;
-    });
+      rows.forEach((r, i) => {
+        if (i === 0) r.classList.add("top1");
+        else if (i === 1) r.classList.add("top2");
+        else if (i === 2) r.classList.add("top3");
+        table.appendChild(r);
+      });
+    }
 
-    rows.forEach(row => table.appendChild(row));
-  }
+    function abrirModal(jugador, cuerpoURL) {
+      const modal = document.getElementById("modal");
+      const nameEl = document.getElementById("playerName");
+      const bodyEl = document.getElementById("playerBody");
+      const statsValues = document.getElementById("statsValues");
 
-  window.onload = cargarJugadores;
-  function ordenarTabla() {
-    const table = document.getElementById("rankingTable").tBodies[0];
-    const rows = Array.from(table.rows);
+      nameEl.textContent = jugador.nombre;
+      bodyEl.src = cuerpoURL;
 
-    rows.sort((a, b) => {
-      const pointsA = parseInt(a.cells[5].innerText, 10);
-      const pointsB = parseInt(b.cells[5].innerText, 10);
-      return pointsB - pointsA;
-    });
+      const stats = [
+        jugador.potencial || jugador.construccion,
+        jugador.precision || jugador.tecnico,
+        jugador.adaptabilidad || jugador.total / 2,
+        jugador.pvp,
+        jugador.construccion,
+        jugador.tecnico
+      ];
 
-    // Reasignar posiciones y clases
-    rows.forEach((row, index) => {
-      row.classList.remove("top1", "top2", "top3");
-      if (index === 0) row.classList.add("top1");
-      else if (index === 1) row.classList.add("top2");
-      else if (index === 2) row.classList.add("top3");
-      table.appendChild(row);
-    });
-  }
-</script>
+      const labels = ["Potencial", "Precisión", "Adaptabilidad", "PvP", "Construcción", "Técnico"];
+
+      if (chartInstance) chartInstance.destroy();
+
+      const ctx = document.getElementById("statsChart");
+      chartInstance = new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Estadísticas",
+            data: stats,
+            backgroundColor: "rgba(121, 51, 171, 0.4)",
+            borderColor: "#b200ff",
+            borderWidth: 2,
+            pointBackgroundColor: "#fff"
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              angleLines: { color: "#444" },
+              grid: { color: "#555" },
+              pointLabels: { color: "#ccc", font: { size: 13 } },
+              ticks: { color: "#999", stepSize: 1, beginAtZero: true, max: 10 }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      statsValues.innerHTML = `
+        <p><b>Potencial:</b> ${stats[0]}</p>
+        <p><b>Precisión:</b> ${stats[1]}</p>
+        <p><b>Adaptabilidad:</b> ${stats[2]}</p>
+        <p><b>PvP:</b> ${stats[3]}</p>
+        <p><b>Construcción:</b> ${stats[4]}</p>
+        <p><b>Técnico:</b> ${stats[5]}</p>
+      `;
+
+      modal.style.display = "flex";
+    }
+
+    document.querySelector(".close").onclick = () => {
+      document.getElementById("modal").style.display = "none";
+    };
+
+    window.onclick = e => {
+      if (e.target === document.getElementById("modal"))
+        document.getElementById("modal").style.display = "none";
+    };
+
+    window.onload = cargarJugadores;
+  </script>
 </body>
 </html>
-
-
-
-
-
